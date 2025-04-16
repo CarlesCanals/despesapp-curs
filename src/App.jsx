@@ -2,7 +2,6 @@ import { useState } from 'react';
 import './App.css';
 import Titol from './components/titol/Titol';
 
-
 function App() {
 
   const [mostrarDespeses, setMostrarDespeses] = useState(false);
