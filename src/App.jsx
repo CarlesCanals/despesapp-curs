@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import './App.css';
 import Titol from './components/titol/Titol';
 import Modal from './components/modal/Modal';
+import DespesesLlista from './components/despesesLlista/DespesesLlista';
+import DespesesForm from './components/despesaForm/DespesaForm';
+
 
 function App() {
 
   const [mostrarDespeses, setMostrarDespeses] = useState(false);
-  const [mostraModal, setMostraModal] = useState(true);
+  const [mostraModal, setMostraModal] = useState(false);
   console.log(mostraModal);
 
   const [despeses, setDespeses] = useState([
@@ -37,21 +40,15 @@ function App() {
             {mostrarDespeses ? 'Amagar despeses' : 'Mostrar despeses'}
           </button>
           
-          {mostrarDespeses &&
-            despeses.map((despesa, index) => (
-              <React.Fragment key={despesa.id}>
-                <h2>{index + 1}. {despesa.concepte}</h2>
-                <button onClick={() => handleClick(despesa.id)}>Eliminar</button>
-              </React.Fragment>
-            ))
-          }
+          {mostrarDespeses && <DespesesLlista despeses={despeses} handleClick={handleClick} />}
 
           {mostraModal && <Modal handleTancar={handleTancar}>
-            <h2>Component modal</h2>
-            <p>Primer paràgraf</p>
-            <p>Segon paràgraf</p>
+              <DespesesForm />
           </Modal>}
-          
+          <hr />
+          <div>
+            <button onClick={() => setMostraModal(true)}>Afegir despesa</button>
+          </div>
         </div>
 
   )
