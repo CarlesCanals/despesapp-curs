@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import Titol from './components/titol/Titol';
+import Modal from './components/modal/Modal';
 
 function App() {
 
   const [mostrarDespeses, setMostrarDespeses] = useState(false);
-
+  const [mostraModal, setMostraModal] = useState(true);
+  console.log(mostraModal);
 
   const [despeses, setDespeses] = useState([
     {concepte: 'Lloguer', quantia: 500, pagatPer: 'Joan', id: 1},
@@ -21,6 +23,10 @@ function App() {
     })
   };
 
+  const handleTancar = () =>{
+    setMostraModal(false);
+  }  
+  
   //console.log(mostrarDespeses);
 
   return (
@@ -33,12 +39,19 @@ function App() {
           
           {mostrarDespeses &&
             despeses.map((despesa, index) => (
-              <div key={despesa.id}>
+              <React.Fragment key={despesa.id}>
                 <h2>{index + 1}. {despesa.concepte}</h2>
                 <button onClick={() => handleClick(despesa.id)}>Eliminar</button>
-              </div>
+              </React.Fragment>
             ))
           }
+
+          {mostraModal && <Modal handleTancar={handleTancar}>
+            <h2>Component modal</h2>
+            <p>Primer paràgraf</p>
+            <p>Segon paràgraf</p>
+          </Modal>}
+          
         </div>
 
   )
