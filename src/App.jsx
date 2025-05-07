@@ -1,57 +1,120 @@
-import React, { useState } from 'react';
+// src/App.jsx
+
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import Titol from './components/titol/Titol';
 import Modal from './components/modal/Modal';
-import DespesesLlista from './components/despesesLlista/DespesesLlista';
-import DespesesForm from './components/despesaForm/DespesaForm';
-
+import DespesesLlista from './components/despesesllista/DespesesLlista';
+import DespesaForm from './components/despesaForm/DespesaForm';
 
 function App() {
+  // 1) Despeses inicials
+  const despesesInicials = [
+    { id: 1, concepte: 'Compra supermercat', quantitat: 50, pagatPer: 'Joan' },
+    { id: 2, concepte: 'Gasolina cotxe', quantitat: 30, pagatPer: 'Maria' },
+    { id: 3, concepte: 'Subscripció Netflix', quantitat: 15, pagatPer: 'Miquel' },
+  ];
 
+  // 2) Estats
   const [mostrarDespeses, setMostrarDespeses] = useState(false);
-  const [mostraModal, setMostraModal] = useState(false);
-  console.log(mostraModal);
+  const [mostraModal, setMostraModal]       = useState(false);
+  const [despeses, setDespeses]             = useState(despesesInicials);
+  const [filtroPagatPer, setFiltroPagatPer] = useState('');
+  const [filtroQuantitat, setFiltroQuantitat] = useState('');
+  const [despesesFiltrades, setDespesesFiltrades] = useState(despesesInicials);
 
-  const [despeses, setDespeses] = useState([
-    {concepte: 'Lloguer', quantia: 500, pagatPer: 'Joan', id: 1},
-    {concepte: 'Internet', quantia: 50, pagatPer: 'Toni', id: 2},
-    {concepte: 'Telèfon', quantia: 30, pagatPer: 'Maria', id: 3},
-    {concepte: 'Gas', quantia: 50, pagatPer: 'Pere', id: 4}
-  ]);
-
-  const handleClick = (id) => {
-    //setDespeses(despeses.filter((despesa) => despesa.id !== id))
-    setDespeses((despesesPrevies) => {
-      return despesesPrevies.filter((despesa) => despesa.id !== id)
-    })
+  // 3) Afegeix una nova despesa
+  const afegirDespesa = (despesa) => {
+    setDespeses((prev) => [...prev, despesa]);
   };
 
-  const handleTancar = () =>{
+  // 4) Elimina una despesa per id
+  const handleClick = (id) => {
+    setDespeses((prev) => prev.filter((d) => d.id !== id));
+  };
+
+  // 5) Tanca el modal
+  const handleTancar = () => {
     setMostraModal(false);
-  }  
-  
-  //console.log(mostrarDespeses);
+  };
+
+  // 6) Filtra cada vegada que canviïn despeses o filtres
+  useEffect(() => {
+    let result = despeses;
+
+    if (filtroPagatPer) {
+      result = result.filter((d) => d.pagatPer === filtroPagatPer);
+    }
+
+    if (filtroQuantitat) {
+      result = result.filter((d) => d.quantitat > Number(filtroQuantitat));
+    }
+
+    setDespesesFiltrades(result);
+  }, [despeses, filtroPagatPer, filtroQuantitat]);
 
   return (
+    <div>
+      <Titol titol="Benvinguts al curs!" subtitol="React & Firebase." />
 
-        <div>
-          <Titol titol="Benvinguts al curs!" subtitol="React & Firebase." />
-          <button onClick={() => setMostrarDespeses(!mostrarDespeses)}>
-            {mostrarDespeses ? 'Amagar despeses' : 'Mostrar despeses'}
-          </button>
-          
-          {mostrarDespeses && <DespesesLlista despeses={despeses} handleClick={handleClick} />}
+      <button onClick={() => setMostrarDespeses((prev) => !prev)}>
+        {mostrarDespeses ? 'Amagar despeses' : 'Mostrar despeses'}
+      </button>
 
-          {mostraModal && <Modal handleTancar={handleTancar}>
-              <DespesesForm />
-          </Modal>}
-          <hr />
-          <div>
-            <button onClick={() => setMostraModal(true)}>Afegir despesa</button>
-          </div>
-        </div>
+      {/* Filtre per Pagat per */}
+      <label htmlFor="filterPagatPer" style={{ marginLeft: '1rem' }}>
+        Filtrar per Pagat per:
+      </label>
+      <select
+        id="filterPagatPer"
+        value={filtroPagatPer}
+        onChange={(e) => setFiltroPagatPer(e.target.value)}
+        style={{ marginLeft: '0.5rem' }}
+      >
+        <option value="">-- Tots --</option>
+        <option value="Joan">Joan</option>
+        <option value="Maria">Maria</option>
+        <option value="Miquel">Miquel</option>
+        <option value="Pere">Pere</option>
+        <option value="Anna">Anna</option>
+        <option value="Laia">Laia</option>
+      </select>
 
-  )
+      {/* Filtre per Quantitat */}
+      <label htmlFor="filterQuantitat" style={{ marginLeft: '1rem' }}>
+        Quantitat &gt;:
+      </label>
+      <input
+        type="number"
+        id="filterQuantitat"
+        value={filtroQuantitat}
+        onChange={(e) => setFiltroQuantitat(e.target.value)}
+        style={{ marginLeft: '0.5rem', width: '5rem' }}
+      />
+
+      {mostrarDespeses && (
+        <DespesesLlista
+          despeses={despesesFiltrades}
+          handleClick={handleClick}
+        />
+      )}
+
+      {mostraModal && (
+        <Modal handleTancar={handleTancar}>
+          <DespesaForm
+            afegirDespesa={afegirDespesa}
+            handleTancar={handleTancar}
+          />
+        </Modal>
+      )}
+
+      <hr />
+
+      <button onClick={() => setMostraModal(true)}>
+        Afegir despesa
+      </button>
+    </div>
+  );
 }
 
-export default App
+export default App;
