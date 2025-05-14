@@ -10,7 +10,7 @@ export default function DespesesLlista({ despeses, handleClick }) {
         <div key={despesa.id} className={estils.targeta}>
           <h2>{index + 1}. {despesa.concepte}</h2>
           <div className={estils.detalls}>
-            <span><strong>Quantitat:</strong> {despesa.quantitat} €</span>
+            <span><strong>Quantitat:</strong> {despesa.quantia} €</span>
             <br></br><span><strong>Pagat per:</strong> {despesa.pagatPer}</span>
           </div>
           <button
