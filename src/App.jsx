@@ -6,14 +6,24 @@ import Titol from './components/titol/Titol';
 import Modal from './components/modal/Modal';
 import DespesesLlista from './components/despesesllista/DespesesLlista';
 import DespesaForm from './components/despesaForm/DespesaForm';
+import { saveDespesa } from './firebase/firebase';
+import { getDespeses } from './firebase/firebase';
+import { deleteDespesa } from './firebase/firebase';
+
 
 function App() {
   // 1) Despeses inicials
-  const despesesInicials = [
-    { id: 1, concepte: 'Compra supermercat', quantitat: 50, pagatPer: 'Joan' },
-    { id: 2, concepte: 'Gasolina cotxe', quantitat: 30, pagatPer: 'Maria' },
-    { id: 3, concepte: 'Subscripció Netflix', quantitat: 15, pagatPer: 'Miquel' },
-  ];
+  const despesesInicials = [];
+
+  useEffect(() => {
+    const getDespesesFromFirebase = async () => {
+      const despeses = await getDespeses();
+      setDespeses(despeses);
+    };
+
+    getDespesesFromFirebase();
+  }
+  , []);
 
   // 2) Estats
   const [mostrarDespeses, setMostrarDespeses] = useState(false);
