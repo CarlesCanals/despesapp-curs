@@ -2,17 +2,19 @@
 
 import React from 'react';
 import estils from './DespesesLlista.module.css';
+import { Link } from 'react-router-dom';
+
 
 export default function DespesesLlista({ despeses, handleClick }) {
   return (
     <div className={estils.llista}>
       {despeses.map((despesa, index) => (
         <div key={despesa.id} className={estils.targeta}>
-          <h2>{index + 1}. {despesa.concepte}</h2>
-          <div className={estils.detalls}>
-            <span><strong>Quantitat:</strong> {despesa.quantia} €</span>
-            <br></br><span><strong>Pagat per:</strong> {despesa.pagatPer}</span>
-          </div>
+         
+          <Link to={`/despesa/${despesa.id}`} className={estils.enllaç}>
+            <h2 className={estils.titol}>{despesa.concepte}</h2>
+          </Link>
+    
           <button
             className={estils.eliminar}
             onClick={() => handleClick(despesa.id)}

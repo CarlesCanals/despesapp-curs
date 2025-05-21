@@ -1,18 +1,8 @@
 // 1) Imports
 import { initializeApp } from "firebase/app";
-import { getFirestore, addDoc, collection, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { getFirestore, addDoc, collection, getDocs, deleteDoc, doc, onSnapshot } from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
-
-// 2) Configuració
-const firebaseConfig = {
-  apiKey: "AIzaSyAg9LHfYIL9pxotY-p9NAKDlPV6h7jgqTw",
-  authDomain: "crud-despeses.firebaseapp.com",
-  projectId: "crud-despeses",
-  storageBucket: "crud-despeses.firebasestorage.app",
-  messagingSenderId: "233865265625",
-  appId: "1:233865265625:web:a69897f498b288c16459c8",
-  measurementId: "G-JGECV13XLC"
-};
+import { firebaseConfig } from './config.js';
 
 // 3) Inicialitza
 const app = initializeApp(firebaseConfig);
@@ -43,4 +33,8 @@ export const getDespeses = async () => {
 export const deleteDespesa = async (id) => {
   await deleteDoc(doc(db, "despeses", id));
   console.log('Despesa esborrada:', id);
+};
+
+export const onGetDespeses = (callback) => {
+  return onSnapshot(collection(db, "despeses"), callback);
 };
