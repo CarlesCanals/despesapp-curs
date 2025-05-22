@@ -15,8 +15,19 @@ export default function Inici() {
     const { documents: despeses } = useCollection('despeses');
 
     const afegirDespesa = async (despesa) => {
-        await saveDespesa(despesa);
-        setMostraModal(false);
+        try {
+            // Assegura que el camp sigui 'quantia'
+            const despesaFirebase = {
+                ...despesa,
+                quantia: despesa.quantitat,
+            };
+            delete despesaFirebase.quantitat; // Opcional: elimina la propietat antiga
+
+            await saveDespesa(despesaFirebase);
+            setMostraModal(false); // Tanca el modal després de guardar
+        } catch (error) {
+            console.error('Error afegint la despesa:', error); // Mostra un error si falla
+        }
     };
 
     const eliminarDespesa = async (id) => {

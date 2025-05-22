@@ -1,6 +1,8 @@
 // src/components/despesaForm/DespesaForm.jsx
 
 import React, { useState } from 'react';
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import { getApp } from 'firebase/app';
 import './DespesaForm.css';
 
 export default function DespesaForm({ afegirDespesa, handleTancar }) {
